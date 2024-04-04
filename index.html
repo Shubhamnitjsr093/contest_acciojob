@@ -1,24 +1,161 @@
-<!-- @format -->
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <button onclick="PrintDeveloperbyMap()">
-      Console log Students with Map
-    </button>
-    <button onclick="PrintDeveloperbyForEach()">
-      Console log Students with foreach
-    </button>
-    <button onclick="addData()">Console New Data with 4th Employee</button>
-    <button onclick="removeAdmin()">Remove Admin</button>
-    <button onclick="concatenateArray()">concatenateArray</button>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Management System</title>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  .success-message {
+    color: green;
+  }
+  .error-message {
+    color: red;
+  }
+  form {
+    margin-bottom: 20px;
+  }
+  label {
+    display: flex;
+    margin-bottom: 5px;
+  }
+  input[type="text"],
+  input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 5px;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .employee-container {
+    margin-bottom: 20px;
+  }
+  .employee-details {
+    display: flex;
+    justify-content: space-between;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  .employee-details p {
+    margin: 5px 0;
+  }
+  .delete-button {
+    background-color: white;
+    color: black;
+  }
+  .delete-button:hover {
+    background-color: #d32f2f;
+  }
+  .box{
+     display: inline;
+  }
+</style>
+</head>
+<body>
+  <h2>Add Employee</h2>
+  <form id="employeeForm">
+    <div class="box">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+      <label for="profession">Profession:</label>
+      <input type="text" id="profession" name="profession" required>
+    </div>
+    <div>
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="age" required>
+    </div>
+    <button type="button" id="addEmployeeBtn">Add Employee</button>
+  </form>
 
-    <script src="./script.js"></script>
-  </body>
+  <h2>Added Employees</h2>
+  <div id="employeeList"></div>
+
+  <script>
+    let employees = [];
+
+    function displayEmployees() {
+      const employeeList = document.getElementById('employeeList');
+      employeeList.innerHTML = '';
+      employees.forEach((employee, index) => {
+        const div = document.createElement('div');
+        div.classList.add('employee-container');
+        div.innerHTML = `
+          <div class="employee-details">
+            <p>${employee.id}.</p>
+            <p>Name: ${employee.name}</p>
+            <p>Profession: ${employee.profession}</p>
+            <p>Age: ${employee.age}</p>
+            <button class="delete-button" onclick="deleteEmployee(${index})">Delete</button>
+          </div>
+        `;
+        employeeList.appendChild(div);
+      });
+    }
+
+    function addEmployee() {
+      const name = document.getElementById('name').value.trim();
+      const profession = document.getElementById('profession').value.trim();
+      const age = parseInt(document.getElementById('age').value);
+
+      if (name === '' || profession === '' || isNaN(age)) {
+        showError('All fields are required.');
+        return;
+      }
+
+      const id = employees.length + 1;
+      const employee = { id, name, profession, age };
+      employees.push(employee);
+      displayEmployees();
+      showSuccess('Employee added successfully.');
+    }
+
+    function deleteEmployee(index) {
+      employees.splice(index, 1);
+      displayEmployees();
+    }
+
+    function showError(message) {
+      const errorDiv = document.createElement('div');
+      errorDiv.textContent = message;
+      errorDiv.classList.add('error-message');
+      document.body.insertBefore(errorDiv, document.getElementById('employeeForm'));
+      setTimeout(() => {
+        errorDiv.remove();
+      }, 3000);
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.createElement('div');
+      successDiv.textContent = message;
+      successDiv.classList.add('success-message');
+      document.body.insertBefore(successDiv, document.getElementById('employeeForm'));
+      setTimeout(() => {
+        successDiv.remove();
+      }, 3000);
+    }
+
+    document.getElementById('addEmployeeBtn').addEventListener('click', addEmployee);
+  </script>
+</body>
 </html>
